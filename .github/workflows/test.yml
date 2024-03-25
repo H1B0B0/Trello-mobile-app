@@ -9,9 +9,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    env:
-      TRELLO_API_KEY: pasdeleak
-      OPENAI_API_KEY: salut
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
