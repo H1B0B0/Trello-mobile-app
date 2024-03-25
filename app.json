@@ -1,6 +1,6 @@
 {
   "expo": {
-    "scheme": "exp",
+    "scheme": "trellow",
     "name": "Trellow",
     "slug": "Trellow",
     "version": "1.0.0",
@@ -12,9 +12,12 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.hibobo.Trellow"
     },
     "android": {
       "adaptiveIcon": {
@@ -26,7 +29,9 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-secure-store"],
+    "plugins": [
+      "expo-secure-store"
+    ],
     "extra": {
       "eas": {
         "projectId": "3f7becfc-e415-41a9-bd55-90adc73f927f"
