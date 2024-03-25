@@ -15,7 +15,6 @@ import * as Linking from "expo-linking";
 import * as SecureStore from "expo-secure-store";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import LottieView from "lottie-react-native";
-import { LogBox } from "react-native";
 
 const CustomComponent = ({ title, onPress, textColor }) => (
   <View style={styles.customComponent}>
@@ -26,7 +25,6 @@ const CustomComponent = ({ title, onPress, textColor }) => (
 );
 
 const App = () => {
-  LogBox.ignoreAllLogs(true);
   const [token, setToken] = useState("");
   const [showGlobalLayout, setShowGlobalLayout] = useState(false);
   const colorScheme = useColorScheme();

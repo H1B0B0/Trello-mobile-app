@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    tags:
+      - '*'
 
 jobs:
   test:
@@ -18,8 +20,37 @@ jobs:
         with:
           node-version: "21"
 
+      - name: Create .env file
+        run: |
+          echo "TRELLO_API_KEY=${{ secrets.TRELLO_API_KEY }}" >> .env
+          echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env
       - name: Install dependencies
         run: npm install
 
       - name: Run tests
         run: npm test
+
+  build:
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "21"
+
+      - name: install eas-cli
+        run: npm install -g eas-cli
+
+      - name: Authenticate with Expo
+        run: eas login -u ${{ secrets.EXPO_USERNAME }} -p ${{ secrets.EXPO_PASSWORD }}
+
+      - name: Build the app
+        run: eas build -p android
+
+      - name: create release
+        run: eas submit --platform android --latest
