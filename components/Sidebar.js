@@ -101,16 +101,23 @@ const Sidebar = ({ setWorkspacesVisibles, workspace }) => {
     SecureStore.getItemAsync("trello_token")
       .then((token) => {
         if (token) {
-          const url = `https://api.trello.com/1/boards/${boardId}?name=${encodeURIComponent(
+          const url = `https://api.trello.com/1/boards/${selectedBoardId}?name=${encodeURIComponent(
             newTitle
           )}&key=${TRELLO_API_KEY}&token=${token}`;
           console.log(url);
           axios
             .put(url)
             .then((response) => {
-              alert(`Board name changed successfully.`);
               setModalVisible(false);
-              fetchBoards();
+
+              // Update the name of the selected board in the local state
+              setBoards((prevBoards) =>
+                prevBoards.map((board) =>
+                  board.id === selectedBoardId
+                    ? { ...board, name: newTitle }
+                    : board
+                )
+              );
             })
             .catch((error) => {
               console.log("Change board name error:", error);
@@ -448,15 +455,23 @@ const Sidebar = ({ setWorkspacesVisibles, workspace }) => {
                   setModalVisible(true);
                   openCreateBoardModal();
                 }}
-                style={[styles.createBoardButton, {backgroundColor: backgroundCards}]}
+                style={[
+                  styles.createBoardButton,
+                  { backgroundColor: backgroundCards },
+                ]}
               >
                 <Text
-                  style={[styles.createBoardButtonText, { color: textColor}]}
+                  style={[styles.createBoardButtonText, { color: textColor }]}
                 >
                   Create New Board
                 </Text>
               </TouchableOpacity>
-              <View style={[styles.createBoardButton, {backgroundColor: backgroundCards}]}>
+              <View
+                style={[
+                  styles.createBoardButton,
+                  { backgroundColor: backgroundCards },
+                ]}
+              >
                 <TouchableOpacity onPress={onclickworkspaces}>
                   <Text
                     style={[styles.createBoardButtonText, { color: textColor }]}
