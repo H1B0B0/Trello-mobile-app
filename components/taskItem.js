@@ -175,16 +175,6 @@ export const TaskItem = ({
       });
   };
 
-  // useEffect(() => {
-  //   if (item.idMembers && item.idMembers.length > 0) {
-  //     getMemberDetails(item.idMembers).then((details) =>
-  //       setMemberDetails(details)
-  //     );
-  //   } else {
-  //     setMemberDetails([]);
-  //   }
-  // }, [item.idMembers]);
-
   const assignToMember = async (taskId, memberId) => {
     const trelloToken = await SecureStore.getItemAsync("trello_token");
 
