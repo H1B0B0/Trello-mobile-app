@@ -439,13 +439,9 @@ export const TaskItem = ({
   };
 
   const DisplayMemberDetails = () => {
-    if (item.idMembers && item.idMembers.length > 0) {
-      getMemberDetails(item.idMembers).then((details) =>
-        setMemberDetails(details)
-      );
-    } else {
-      setMemberDetails([]);
-    }
+    getMemberDetails(item.idMembers).then((details) =>
+      setMemberDetails(details)
+    );
   };
 
   const greenOpacity = useAnimatedStyle(() => {
