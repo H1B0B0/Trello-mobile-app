@@ -24,6 +24,8 @@ import * as SecureStore from "expo-secure-store";
 import { CardContext } from "../contexts/cards";
 import Dialog from "react-native-dialog";
 import RNPickerSelect from "react-native-picker-select";
+import { BoardIdContext } from "../contexts/boardID";
+import { set } from "animejs";
 
 const colorMap = {
   green: "#008000",
@@ -144,6 +146,9 @@ export const TaskItem = ({
   const [choicedialogVisible, setchoiceDialogVisible] = useState(false);
   const [memberVisible, setMemberVisible] = useState(false);
   const colorScheme = useColorScheme();
+  const { boardId, setBoardId } = useContext(BoardIdContext);
+  const [members, setMembers] = useState([]);
+  const [selectedMember, setSelectedMember] = useState(null);
   const backgroundColor = colorScheme === "dark" ? "#1C1C1C" : "#Dcdede";
   const textColor = colorScheme === "dark" ? "white" : "black";
   const backgroundCards = colorScheme === "dark" ? "#253337" : "#9DB5C0";
@@ -190,6 +195,31 @@ export const TaskItem = ({
       )
       .then(() => {
         console.log("Member added successfully");
+
+        // Update the task in the local state
+        setTasks((prevTasks) => {
+          return prevTasks.map((taskData) => {
+            if (taskData.tasks.some((task) => task.id === taskId)) {
+              // Update the task with the new member
+              return {
+                ...taskData,
+                tasks: taskData.tasks.map((task) => {
+                  if (task.id === taskId) {
+                    return {
+                      ...task,
+                      idMembers: [...task.idMembers, memberId],
+                    };
+                  } else {
+                    return task;
+                  }
+                }),
+              };
+            } else {
+              return taskData;
+            }
+          });
+        });
+        DisplayMemberDetails();
       })
       .catch((error) => {
         console.error("Error adding member:", error);
@@ -288,8 +318,25 @@ export const TaskItem = ({
     setDialogVisible(false);
   };
 
-  const handlememeberpressed = () => {
+  const handlememeberpressed = async () => {
     setMemberVisible(true);
+
+    const trelloToken = await SecureStore.getItemAsync("trello_token");
+
+    // Fetch the members from Trello
+    axios
+      .get(
+        `https://api.trello.com/1/boards/${boardId}/members?key=${TRELLO_API_KEY}&token=${trelloToken}`
+      )
+      .then((response) => {
+        const fetchedMembers = response.data;
+        setMembers(fetchedMembers);
+        console.log("Members fetched successfully:", fetchedMembers);
+      })
+      .catch((error) => {
+        console.error("Error fetching members:", error);
+        Alert.alert("Error fetching members", "Please try again later.");
+      });
   };
 
   const gestureHandler = useAnimatedGestureHandler({
@@ -333,12 +380,12 @@ export const TaskItem = ({
   });
 
   const handleOkPress = async () => {
-    console.log("Username:", username);
+    console.log("Username:", selectedMember);
     const trelloToken = await SecureStore.getItemAsync("trello_token");
     let memberId = "";
     await axios
       .get(
-        `https://api.trello.com/1/members/${username}?key=${TRELLO_API_KEY}&token=${trelloToken}`
+        `https://api.trello.com/1/members/${selectedMember}?key=${TRELLO_API_KEY}&token=${trelloToken}`
       )
       .then((response) => {
         memberId = response.data.id;
@@ -398,6 +445,16 @@ export const TaskItem = ({
       } else {
         setMemberDetails([]);
       }
+    }
+  };
+
+  const DisplayMemberDetails = () => {
+    if (item.idMembers && item.idMembers.length > 0) {
+      getMemberDetails(item.idMembers).then((details) =>
+        setMemberDetails(details)
+      );
+    } else {
+      setMemberDetails([]);
     }
   };
 
@@ -693,13 +750,34 @@ export const TaskItem = ({
             color: textColor,
           }}
         >
-          Enter his username
+          Select a member from the list
         </Dialog.Description>
-        <Dialog.Input
+        <RNPickerSelect
+          onValueChange={(value) => setSelectedMember(value)}
+          items={members
+            .filter((member) => !item.idMembers.includes(member.id))
+            .map((member) => ({
+              label: member.fullName,
+              value: member.username,
+            }))}
           style={{
-            color: textColor,
+            useNativeAndroidPickerStyle: false,
+            inputIOS: {
+              color: "white",
+              height: 40,
+              justifyContent: "center",
+              alignItems: "center",
+              padding: 10,
+            },
+            inputAndroid: {
+              color: textColor,
+              backgroundColor: backgroundColor,
+              height: 40,
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: 8,
+            },
           }}
-          onChangeText={(text) => setUsername(text)}
         />
         <Dialog.Button
           label="Cancel"
