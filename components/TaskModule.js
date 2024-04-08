@@ -222,7 +222,7 @@ const TaskModule = () => {
           <ActivityIndicator
             size="large"
             color="#ACACAC"
-            style={(styles.loading, { zIndex: 2 })}
+            style={styles.loading}
           />
         )}
       </View>
@@ -272,9 +272,7 @@ const TaskModule = () => {
             >
               New Task
             </Dialog.Title>
-            {isThinking && (
-              <ActivityIndicator style={{ zIndex: 1, margin: 2 }} />
-            )}
+            {isThinking && <ActivityIndicator style={{ margin: 2 }} />}
             <Dialog.Input
               value={taskName}
               onChangeText={setTaskName}
@@ -332,7 +330,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     justifyContent: "center",
     alignItems: "center",
-    zIndex: 1,
   },
   blurView: {
     marginBottom: 15,

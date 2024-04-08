@@ -1,7 +1,7 @@
 {
   "expo": {
-    "scheme": "trellow",
     "name": "Trellow",
+    "scheme": "trellow",
     "slug": "Trellow",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -12,30 +12,18 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.hibobo.Trellow"
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "package": "com.hibobo.Trellow"
-    },
+    "assetBundlePatterns": ["**/*"],
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "expo-secure-store"
-    ],
+    "plugins": ["expo-secure-store"],
     "extra": {
       "eas": {
         "projectId": "3f7becfc-e415-41a9-bd55-90adc73f927f"
       }
+    },
+    "android": {
+      "package": "com.hibobo.Trellow"
     }
   }
 }
