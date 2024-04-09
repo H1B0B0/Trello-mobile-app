@@ -15,6 +15,7 @@ import * as Linking from "expo-linking";
 import * as SecureStore from "expo-secure-store";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import LottieView from "lottie-react-native";
+import * as NavigationBar from "expo-navigation-bar";
 
 const CustomComponent = ({ title, onPress, textColor }) => (
   <View style={styles.customComponent}>
@@ -45,6 +46,10 @@ const App = () => {
     checkToken();
   }, []);
 
+  useEffect(() => {
+    NavigationBar.setBackgroundColorAsync(backgroundColor);
+  }, [colorScheme]);
+
   async function openLink() {
     // Generate a redirect URL
     const redirectUrl = Linking.createURL("");
@@ -70,11 +75,15 @@ const App = () => {
 
   return (
     <SafeAreaProvider>
+      <StatusBar backgroundColor={backgroundColor} />
       <GestureHandlerRootView style={{ flex: 1 }}>
         <View
           style={[
             styles.container,
-            { backgroundColor, paddingTop: StatusBar.currentHeight },
+            {
+              backgroundColor: backgroundColor,
+              paddingTop: StatusBar.currentHeight,
+            },
           ]}
         >
           <LottieView

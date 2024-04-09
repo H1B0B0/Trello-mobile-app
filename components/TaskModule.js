@@ -218,13 +218,7 @@ const TaskModule = () => {
   return (
     <View style={styles.container}>
       <View style={styles.loadingcontainer}>
-        {isLoading && (
-          <ActivityIndicator
-            size="large"
-            color="#ACACAC"
-            style={styles.loading}
-          />
-        )}
+        {isLoading && <ActivityIndicator size="large" color="#ACACAC" />}
       </View>
       <FlatList
         ref={flatListRef}
@@ -326,7 +320,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 0,
     right: 0,
-    top: 0,
+    top: -100,
     bottom: 0,
     justifyContent: "center",
     alignItems: "center",

@@ -412,7 +412,7 @@ const Sidebar = ({ setWorkspacesVisibles, workspace }) => {
                     style={[
                       styles.workspaceItemContainer,
                       {
-                        backgroundColor: "#0079bf",
+                        backgroundColor: "#292828",
                         maxHeight: 100,
                         minHeight: 100,
                         overflow: "hidden",

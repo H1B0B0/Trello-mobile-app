@@ -55,7 +55,7 @@ jobs:
         run: eas login -u ${{ secrets.EXPO_USERNAME }} -p ${{ secrets.EXPO_PASSWORD }}
 
       - name: Build the app
-        run: eas build -p android
+        run: eas build --platform android --local
 
       - name: create release
         run: eas submit --platform android --latest
