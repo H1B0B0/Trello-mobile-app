@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   View,
+  Platform,
   Text,
   StyleSheet,
   TouchableOpacity,
@@ -47,7 +48,10 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    NavigationBar.setBackgroundColorAsync(backgroundColor);
+    if (Platform.OS === "android") {
+      console.log("colorScheme:", colorScheme);
+      NavigationBar.setBackgroundColorAsync(backgroundColor);
+    }
   }, [colorScheme]);
 
   async function openLink() {
@@ -75,13 +79,11 @@ const App = () => {
 
   return (
     <SafeAreaProvider>
-      <StatusBar backgroundColor={backgroundColor} />
       <GestureHandlerRootView style={{ flex: 1 }}>
         <View
           style={[
             styles.container,
             {
-              backgroundColor: backgroundColor,
               paddingTop: StatusBar.currentHeight,
             },
           ]}
