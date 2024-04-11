@@ -25,7 +25,6 @@ import { CardContext } from "../contexts/cards";
 import Dialog from "react-native-dialog";
 import RNPickerSelect from "react-native-picker-select";
 import { BoardIdContext } from "../contexts/boardID";
-import { set } from "animejs";
 
 const colorMap = {
   green: "#00C853",

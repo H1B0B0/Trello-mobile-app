@@ -52,6 +52,7 @@ const Sidebar = ({ setWorkspacesVisibles, workspace }) => {
   const textColor = colorScheme === "dark" ? "white" : "black";
   const backgroundColorPopup = colorScheme === "dark" ? "#1C1C1C" : "#Dcdede";
   const backgroundCards = colorScheme === "dark" ? "#1C1C1C" : "#Dcdede";
+  const color = colorScheme === "dark" ? "#CA56FA" : "#691463";
   const sidebarAnimation = useSharedValue(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [newBoardName, setNewBoardName] = useState("");
@@ -61,7 +62,6 @@ const Sidebar = ({ setWorkspacesVisibles, workspace }) => {
   const [newTitle, setNewTitle] = useState("");
   const [selectedTemplateId, setSelectedTemplateId] = useState("");
   const [selectedBoardId, setSelectedBoardId] = useState(null);
-  const [svgContent, setSvgContent] = useState(null);
 
   const fetchBoards = () => {
     SecureStore.getItemAsync("trello_token")
@@ -490,11 +490,7 @@ const Sidebar = ({ setWorkspacesVisibles, workspace }) => {
           accessibilityLabel="Open sidebar"
           testID="sidebar"
         >
-          <Icon
-            name="arrow-forward-ios"
-            size={24}
-            style={{ color: textColor }}
-          />
+          <Icon name="arrow-forward-ios" size={24} style={{ color: color }} />
         </TouchableOpacity>
       )}
 
