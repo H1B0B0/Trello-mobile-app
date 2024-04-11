@@ -30,8 +30,8 @@ const GlobalLayout = ({ setShowGlobalLayout }) => {
   const insets = useSafeAreaInsets();
   const animationpath =
     colorScheme === "dark"
-      ? require("./assets/animation-dark.json")
-      : require("./assets/animation-light.json");
+      ? require("./assets/animation-light.json")
+      : require("./assets/animation-dark.json");
 
   const backgroundColor = colorScheme === "dark" ? "#1C1C1C" : "#Dcdede";
   const logoutColor = colorScheme === "dark" ? "#691A14" : "#BE3025";

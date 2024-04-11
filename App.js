@@ -34,8 +34,8 @@ const App = () => {
   const textColor = colorScheme === "dark" ? "white" : "black";
   const animationpath =
     colorScheme === "dark"
-      ? require("./assets/animation-dark.json")
-      : require("./assets/animation-light.json");
+      ? require("./assets/animation-light.json")
+      : require("./assets/animation-dark.json");
   useEffect(() => {
     async function checkToken() {
       const trello_token = await SecureStore.getItemAsync("trello_token");

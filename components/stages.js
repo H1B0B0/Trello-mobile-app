@@ -36,6 +36,7 @@ const Stages = ({ currentStage, setCurrentStage, waitFor }) => {
   const textColor = colorScheme === "dark" ? "white" : "black";
   const backgroundColor = colorScheme === "dark" ? "#424242" : "white";
   const backgroundcontainer = colorScheme === "dark" ? "#253337" : "#9DB5C0";
+  const arrowcolor = colorScheme === "dark" ? "#CA56FA" : "#691463";
 
   const translateX = useSharedValue(0);
 
@@ -247,7 +248,10 @@ const Stages = ({ currentStage, setCurrentStage, waitFor }) => {
           {stages && stageIndex > 0 && (
             <Icon
               testID="leftArrow"
-              style={[styles.stageArrow, { color: textColor }]}
+              style={[
+                styles.stageArrow,
+                { color: arrowcolor, borderColor: textColor },
+              ]}
               name="keyboard-arrow-left"
               onPress={handleLeftArrowPress}
             />
@@ -456,7 +460,7 @@ const Stages = ({ currentStage, setCurrentStage, waitFor }) => {
           {stages && stageIndex != stages.length - 1 && (
             <Icon
               testID="rightArrow"
-              style={[styles.stageArrow, { color: textColor }]}
+              style={[styles.stageArrow, { color: arrowcolor }]}
               name="keyboard-arrow-right"
               onPress={handleRightArrowPress}
             />
