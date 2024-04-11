@@ -110,7 +110,7 @@ const GlobalLayout = ({ setShowGlobalLayout }) => {
                       <Icon
                         name="logout"
                         size={20}
-                        style={[{ color: textColor }]}
+                        style={[{ color: "white" }]}
                       />
                     </TouchableOpacity>
                   </View>
