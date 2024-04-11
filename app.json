@@ -17,12 +17,12 @@
       "favicon": "./assets/favicon.png"
     },
     "android": {
-      "package": "com.hibobo.Trellow"
+      "package": "com.hibobo.trellow"
     },
     "plugins": ["expo-secure-store"],
     "extra": {
       "eas": {
-        "projectId": "3f7becfc-e415-41a9-bd55-90adc73f927f"
+        "projectId": "f3546d4b-98f0-4dcd-b0ed-4375bb7023e4"
       }
     }
   }
