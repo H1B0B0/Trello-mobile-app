@@ -266,14 +266,28 @@ const TaskModule = () => {
             >
               New Task
             </Dialog.Title>
-            {isThinking && <ActivityIndicator style={{ margin: 2 }} />}
+
             <Dialog.Input
               value={taskName}
               onChangeText={setTaskName}
               style={{
                 color: textColor,
+                maxWidth: "90%",
+                minWidth: "80%",
+                width: "100%",
               }}
             />
+            {isThinking && (
+              <ActivityIndicator
+                style={{
+                  position: "absolute",
+                  right: 0,
+                  top: 0,
+                  bottom: 6,
+                  left: 0,
+                }}
+              />
+            )}
             <Dialog.Button
               label="Cancel"
               onPress={handleCancel}
@@ -320,8 +334,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 0,
     right: 0,
-    top: 100,
-    bottom: 0,
+    top: 0,
+    bottom: 100,
     justifyContent: "center",
     alignItems: "center",
   },
