@@ -98,6 +98,7 @@ const App = () => {
               bottom: 0,
               left: 0,
               right: 0,
+              backgroundColor: backgroundColor,
             }}
           />
           <StatusBar translucent backgroundColor="transparent" />
