@@ -17,13 +17,19 @@
       "favicon": "./assets/favicon.png"
     },
     "android": {
-      "package": "com.hibobo.trellow"
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon-light.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.hibobo.app"
     },
-    "plugins": ["expo-secure-store"],
     "extra": {
       "eas": {
         "projectId": "f3546d4b-98f0-4dcd-b0ed-4375bb7023e4"
       }
+    },
+    "ios": {
+      "bundleIdentifier": "com.hibobo.app"
     }
   }
 }

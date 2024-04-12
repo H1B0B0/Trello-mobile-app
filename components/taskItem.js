@@ -481,7 +481,7 @@ export const TaskItem = ({
             animatedStyle,
             {
               justifyContent: "center",
-              backgroundColor: item.cover.color || backgroundCards,
+              backgroundColor: colorMap[item.cover.color] || backgroundCards,
               shadowColor: textColor,
               borderRadius: 10, // Move borderRadius here
               overflow: "hidden", // Add overflow: 'hidden'

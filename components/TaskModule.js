@@ -17,7 +17,6 @@ import { TRELLO_API_KEY } from "@env";
 import * as SecureStore from "expo-secure-store";
 import { CardContext } from "../contexts/cards";
 import { TaskItem } from "./taskItem";
-import OpenAI from "openai";
 import { OPENAI_API_KEY } from "@env";
 
 const TaskModule = () => {
@@ -74,7 +73,6 @@ const TaskModule = () => {
       (data) => data.stageId === stages[stagesId].id
     );
   }
-  const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
   const [isThinking, setIsThinking] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -107,34 +105,34 @@ const TaskModule = () => {
         tasksData.push({
           stageId: stage.id,
           tasks: response.data.map((card) => ({
-            id: card.id,
-            title: card.name,
-            badges: card.badges,
-            checkItemStates: card.checkItemStates,
-            closed: card.closed,
-            dateLastActivity: card.dateLastActivity,
-            desc: card.desc,
-            due: card.due,
-            email: card.email,
-            idBoard: card.idBoard,
-            idChecklists: card.idChecklists,
-            idLabels: card.idLabels,
-            idList: card.idList,
-            idMembers: card.idMembers,
-            idMembersVoted: card.idMembersVoted,
-            idShort: card.idShort,
-            labels: card.labels,
-            limits: card.limits,
-            locationName: card.locationName,
-            manualCoverAttachment: card.manualCoverAttachment,
-            name: card.name,
-            pos: card.pos,
-            shortLink: card.shortLink,
-            shortUrl: card.shortUrl,
-            subscribed: card.subscribed,
-            url: card.url,
-            cover: card.cover,
-          })),
+              id: card.id,
+              title: card.name,
+              badges: card.badges,
+              checkItemStates: card.checkItemStates,
+              closed: card.closed,
+              dateLastActivity: card.dateLastActivity,
+              desc: card.desc,
+              due: card.due,
+              email: card.email,
+              idBoard: card.idBoard,
+              idChecklists: card.idChecklists,
+              idLabels: card.idLabels,
+              idList: card.idList,
+              idMembers: card.idMembers,
+              idMembersVoted: card.idMembersVoted,
+              idShort: card.idShort,
+              labels: card.labels,
+              limits: card.limits,
+              locationName: card.locationName,
+              manualCoverAttachment: card.manualCoverAttachment,
+              name: card.name,
+              pos: card.pos,
+              shortLink: card.shortLink,
+              shortUrl: card.shortUrl,
+              subscribed: card.subscribed,
+              url: card.url,
+              cover: card.cover,
+            })),
         });
       }
       setTasks(tasksData);
@@ -166,15 +164,31 @@ const TaskModule = () => {
       { role: "user", content: `My current tasks are: ${tasksString}` },
     ];
 
-    openai.chat.completions
-      .create({
+    // Make the API request
+    fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
         model: "gpt-3.5-turbo",
         messages: messages,
-      })
+      }),
+    })
       .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
         setIsThinking(false);
+        if (!data.choices || data.choices.length === 0) {
+          throw new Error("No choices returned from the OpenAI API");
+        }
         // Get the suggested task from the response
-        const suggestedTask = response.choices[0].message.content;
+        const suggestedTask = data.choices[0].message.content;
 
         // Extract the task suggestion from the response
         let taskSuggestion = "";
