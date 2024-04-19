@@ -34,7 +34,7 @@ const Stages = ({ currentStage, setCurrentStage, waitFor }) => {
   const [UpdateStageName, setUpdateStageName] = useState("");
   const colorScheme = useColorScheme();
   const textColor = colorScheme === "dark" ? "white" : "black";
-  const backgroundColor = colorScheme === "dark" ? "#424242" : "white";
+  const backgroundColor = colorScheme === "dark" ? "#1C1C1C" : "#Dcdede";
   const backgroundcontainer = colorScheme === "dark" ? "#253337" : "#9DB5C0";
   const arrowcolor = colorScheme === "dark" ? "#CA56FA" : "#691463";
 
