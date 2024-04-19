@@ -16,17 +16,20 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/icon-light.png",
-        "backgroundColor": "#FFFFFF"
-      },
-      "package": "com.hibobo.app"
-    },
     "extra": {
       "eas": {
         "projectId": "f3546d4b-98f0-4dcd-b0ed-4375bb7023e4"
       }
+    },
+    "android": {
+      "package": "trellow.hibobo.app",
+      "intentFilters": [
+        {
+          "data": {
+            "scheme": "trellow"
+          }
+        }
+      ]
     },
     "ios": {
       "bundleIdentifier": "com.hibobo.app"

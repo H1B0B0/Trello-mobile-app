@@ -9,6 +9,7 @@ import {
   useColorScheme,
   FlatList,
   ImageBackground,
+  Platform,
 } from "react-native";
 import { PanGestureHandler } from "react-native-gesture-handler";
 import Animated, {
@@ -126,13 +127,14 @@ export const TaskItem = ({
   isExpanded,
   handlePress,
   setIsExpanded,
+  memberDetails,
+  setMembersDetails,
 }) => {
   const translateX = useSharedValue(0);
   const { stagesId, setStagesId } = useContext(CardContext);
   let newStageId = "";
   const nextStageIndex = stagesId + 1;
   const prevStageIndex = stagesId - 1;
-  const [memberDetails, setMemberDetails] = useState({});
   const [selectedColor, setSelectedColor] = useState(null);
   const colorOptions = Object.entries(colorMap);
   const [showDialog, setShowDialog] = useState(false);
@@ -178,42 +180,14 @@ export const TaskItem = ({
     const trelloToken = await SecureStore.getItemAsync("trello_token");
 
     // Add a member to the task in Trello
-    axios
-      .post(
+    try {
+      await axios.post(
         `https://api.trello.com/1/cards/${taskId}/idMembers?value=${memberId}&key=${TRELLO_API_KEY}&token=${trelloToken}`
-      )
-      .then(() => {
-        console.log("Member added successfully");
-
-        // Update the task in the local state
-        setTasks((prevTasks) => {
-          return prevTasks.map((taskData) => {
-            if (taskData.tasks.some((task) => task.id === taskId)) {
-              // Update the task with the new member
-              return {
-                ...taskData,
-                tasks: taskData.tasks.map((task) => {
-                  if (task.id === taskId) {
-                    return {
-                      ...task,
-                      idMembers: [...task.idMembers, memberId],
-                    };
-                  } else {
-                    return task;
-                  }
-                }),
-              };
-            } else {
-              return taskData;
-            }
-          });
-        });
-        DisplayMemberDetails();
-      })
-      .catch((error) => {
-        console.error("Error adding member:", error);
-        Alert.alert("Error adding member", "Please try again later.");
-      });
+      );
+    } catch (error) {
+      console.error("Error adding member:", error);
+      Alert.alert("Error adding member", "Please try again later.");
+    }
   };
 
   const deleteTask = async (taskId) => {
@@ -320,7 +294,6 @@ export const TaskItem = ({
       .then((response) => {
         const fetchedMembers = response.data;
         setMembers(fetchedMembers);
-        console.log("Members fetched successfully:", fetchedMembers);
       })
       .catch((error) => {
         console.error("Error fetching members:", error);
@@ -369,7 +342,6 @@ export const TaskItem = ({
   });
 
   const handleOkPress = async () => {
-    console.log("Username:", selectedMember);
     const trelloToken = await SecureStore.getItemAsync("trello_token");
     let memberId = "";
     await axios
@@ -387,60 +359,13 @@ export const TaskItem = ({
       });
   };
 
-  const getMemberDetails = async (memberIds) => {
-    // Check if memberIds is an array and if it's empty
-    if (!Array.isArray(memberIds) || memberIds.length === 0) {
-      return [];
-    }
-
-    const trelloToken = await SecureStore.getItemAsync("trello_token");
-
-    let memberDetails = [];
-
-    // Get details for each member
-    for (let i = 0; i < memberIds.length; i++) {
-      try {
-        const response = await axios.get(
-          `https://api.trello.com/1/members/${memberIds[i]}?key=${TRELLO_API_KEY}&token=${trelloToken}`
-        );
-
-        memberDetails.push(response.data);
-      } catch (error) {
-        if (error.response && error.response.status === 429) {
-          console.error("Error getting member details: Too Many Requests.");
-        } else {
-          console.error("Error getting member details:", error);
-          Alert.alert(
-            "Error getting member details",
-            "Please try again later."
-          );
-        }
-      }
-    }
-
-    return memberDetails;
-  };
-
   // Rename the function inside the component
   const handleTaskPress = () => {
     if (isExpanded === item.id) {
       setIsExpanded(null); // Si la tâche est déjà étendue, la réduire
     } else {
       setIsExpanded(item.id); // Sinon, étendre la tâche
-      if (item.idMembers && item.idMembers.length > 0) {
-        getMemberDetails(item.idMembers).then((details) =>
-          setMemberDetails(details)
-        );
-      } else {
-        setMemberDetails([]);
-      }
     }
-  };
-
-  const DisplayMemberDetails = () => {
-    getMemberDetails(item.idMembers).then((details) =>
-      setMemberDetails(details)
-    );
   };
 
   const greenOpacity = useAnimatedStyle(() => {
@@ -573,7 +498,9 @@ export const TaskItem = ({
                       Members
                     </Text>
                     <FlatList
-                      data={memberDetails}
+                      data={item.idMembers
+                        .map((id) => memberDetails[id])
+                        .filter(Boolean)}
                       keyExtractor={(item, index) => index.toString()}
                       renderItem={({ item: member }) => (
                         <View
@@ -640,15 +567,14 @@ export const TaskItem = ({
                 setSelectedColor(value);
               }
             }}
-            items={colorOptions
-              .filter(([colorName]) => !appliedLabels.includes(colorName))
-              .map(([colorName, colorValue]) => ({
-                label: colorName,
-                value: colorName,
-              }))}
+            items={Object.entries(colorMap).map(([colorName, colorValue]) => ({
+              label: colorName,
+              value: colorName,
+            }))}
             style={{
-              useNayiveAndroidPickerStyle: false,
+              useNativeAndroidPickerStyle: false,
               inputIOS: {
+                color: "transparent",
                 color: "white",
                 height: 40,
                 justifyContent: "center",
@@ -656,6 +582,7 @@ export const TaskItem = ({
                 padding: 10,
               },
               inputAndroid: {
+                color: "transparent",
                 borderRadius: 8,
                 color: textColor,
                 backgroundColor: backgroundColor,
@@ -665,16 +592,31 @@ export const TaskItem = ({
                 borderRadius: 8,
               },
             }}
+            useNativeAndroidPickerStyle={false}
+            textInputProps={{
+              color: "transparent",
+              width: 250,
+              height: 20,
+              borderRadius: 10,
+              backgroundColor: colorMap[selectedColor],
+              borderColor: textColor,
+              borderWidth: 1,
+              margin: 10,
+            }}
           />
         </View>
         <Dialog.Button
           label="Cancel"
-          style={{ color: "orange" }}
+          style={{
+            color: "orange",
+          }}
           onPress={() => setShowDialog(false)}
         />
         <Dialog.Button
           label="Assign"
-          style={{ color: textColor }}
+          style={{
+            color: textColor,
+          }}
           onPress={assignColor}
         />
       </Dialog.Container>

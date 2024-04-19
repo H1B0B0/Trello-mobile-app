@@ -67,6 +67,8 @@ const TaskModule = () => {
   const { stagesId, setStagesId } = useContext(CardContext);
   const [isAddingTask, setIsAddingTask] = useState(false);
   const [isMovingTask, setIsMovingTask] = useState(false);
+  const [memberDetails, setMemberDetails] = useState({});
+
   let currentStageData;
   if (stages[stagesId]) {
     currentStageData = tasks.find(
@@ -91,6 +93,44 @@ const TaskModule = () => {
     setTaskName("");
   };
 
+  const fetchBoardMembers = async () => {
+    const trelloToken = await SecureStore.getItemAsync("trello_token");
+
+    try {
+      const response = await axios.get(
+        `https://api.trello.com/1/boards/${boardId}/members?key=${TRELLO_API_KEY}&token=${trelloToken}`
+      );
+
+      if (response.status === 200) {
+        let details = {};
+
+        await Promise.all(
+          response.data.map(async (member) => {
+            const memberResponse = await axios.get(
+              `https://api.trello.com/1/members/${member.id}?key=${TRELLO_API_KEY}&token=${trelloToken}`
+            );
+
+            if (memberResponse.status === 200) {
+              details[member.id] = memberResponse.data;
+            } else {
+              console.error(
+                `Error getting details for member ID ${member.id}: ${memberResponse.status}`
+              );
+            }
+          })
+        );
+
+        setMemberDetails(details);
+      } else {
+        console.error(
+          `Error getting members for board ID ${boardId}: ${response.status}`
+        );
+      }
+    } catch (error) {
+      console.error("Error getting board members:", error);
+    }
+  };
+
   const fetchCardsData = async () => {
     if (!isUpdating && !isAddingTask && !isMovingTask && stages.length > 0) {
       if (!animationPlayed) {
@@ -105,37 +145,38 @@ const TaskModule = () => {
         tasksData.push({
           stageId: stage.id,
           tasks: response.data.map((card) => ({
-              id: card.id,
-              title: card.name,
-              badges: card.badges,
-              checkItemStates: card.checkItemStates,
-              closed: card.closed,
-              dateLastActivity: card.dateLastActivity,
-              desc: card.desc,
-              due: card.due,
-              email: card.email,
-              idBoard: card.idBoard,
-              idChecklists: card.idChecklists,
-              idLabels: card.idLabels,
-              idList: card.idList,
-              idMembers: card.idMembers,
-              idMembersVoted: card.idMembersVoted,
-              idShort: card.idShort,
-              labels: card.labels,
-              limits: card.limits,
-              locationName: card.locationName,
-              manualCoverAttachment: card.manualCoverAttachment,
-              name: card.name,
-              pos: card.pos,
-              shortLink: card.shortLink,
-              shortUrl: card.shortUrl,
-              subscribed: card.subscribed,
-              url: card.url,
-              cover: card.cover,
-            })),
+            id: card.id,
+            title: card.name,
+            badges: card.badges,
+            checkItemStates: card.checkItemStates,
+            closed: card.closed,
+            dateLastActivity: card.dateLastActivity,
+            desc: card.desc,
+            due: card.due,
+            email: card.email,
+            idBoard: card.idBoard,
+            idChecklists: card.idChecklists,
+            idLabels: card.idLabels,
+            idList: card.idList,
+            idMembers: card.idMembers,
+            idMembersVoted: card.idMembersVoted,
+            idShort: card.idShort,
+            labels: card.labels,
+            limits: card.limits,
+            locationName: card.locationName,
+            manualCoverAttachment: card.manualCoverAttachment,
+            name: card.name,
+            pos: card.pos,
+            shortLink: card.shortLink,
+            shortUrl: card.shortUrl,
+            subscribed: card.subscribed,
+            url: card.url,
+            cover: card.cover,
+          })),
         });
       }
       setTasks(tasksData);
+      fetchBoardMembers();
       if (!isUpdating) {
         setIsLoading(false);
       }
@@ -249,6 +290,8 @@ const TaskModule = () => {
             isExpanded={isExpanded}
             handlePress={handlePress}
             setIsExpanded={setIsExpanded}
+            memberDetails={memberDetails}
+            setMemberDetails={setMemberDetails}
           />
         )}
         keyExtractor={(item, index) => item.id + index}
