@@ -1,12 +1,16 @@
 {
   "expo": {
     "name": "Trellow",
-    "scheme": "trellow",
-    "slug": "Trellow",
+    "slug": "trellow",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon-light.png",
     "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/icon-dark.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
     "assetBundlePatterns": ["**/*"],
     "web": {
       "favicon": "./assets/favicon.png"
@@ -17,11 +21,11 @@
     "ios": {
       "bundleIdentifier": "com.hibobo.Trellow"
     },
+    "owner": "hibobo",
     "extra": {
       "eas": {
-        "projectId": "f3546d4b-98f0-4dcd-b0ed-4375bb7023e4"
+        "projectId": "5d0453b0-88e0-41e6-9e1e-a6ddcbb5cc3b"
       }
-    },
-    "owner": "hibobo"
+    }
   }
 }
