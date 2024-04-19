@@ -19,7 +19,7 @@
       "package": "com.hibobo.Trellow"
     },
     "ios": {
-      "bundleIdentifier": "com.hibobo.Trellow"
+      "bundleIdentifier": "trellow"
     },
     "owner": "hibobo",
     "extra": {
