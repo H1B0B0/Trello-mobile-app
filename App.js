@@ -32,6 +32,11 @@ const App = () => {
   const colorScheme = useColorScheme();
   const backgroundColor = colorScheme === "dark" ? "#1C1C1C" : "#Dcdede";
   const textColor = colorScheme === "dark" ? "white" : "black";
+  const [showSplash, setShowSplash] = useState(true);
+  const splashAnimation =
+    colorScheme === "dark"
+      ? require("./assets/dark_splash.json")
+      : require("./assets/light_splash.json");
   const animationpath =
     colorScheme === "dark"
       ? require("./assets/animation-light.json")
@@ -88,28 +93,49 @@ const App = () => {
             },
           ]}
         >
-          <LottieView
-            source={animationpath}
-            autoPlay
-            loop
-            style={{
-              position: "absolute",
-              top: 0,
-              bottom: 0,
-              left: 0,
-              right: 0,
-              backgroundColor: backgroundColor,
-            }}
-          />
-          <StatusBar translucent backgroundColor="transparent" />
-          {showGlobalLayout ? (
-            <GlobalLayout setShowGlobalLayout={setShowGlobalLayout} />
-          ) : (
-            <CustomComponent
-              title="Login"
-              onPress={openLink}
-              textColor={textColor}
+          {showSplash ? (
+            <LottieView
+              source={splashAnimation}
+              autoPlay
+              loop={false}
+              speed={1.5}
+              onAnimationFinish={() => setShowSplash(false)}
+              style={{
+                position: "absolute",
+                top: 0,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                backgroundColor: backgroundColor,
+                transform: [{ scale: 1.5 }],
+              }}
             />
+          ) : (
+            <>
+              <LottieView
+                source={animationpath}
+                autoPlay
+                loop
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  backgroundColor: backgroundColor,
+                }}
+              />
+              <StatusBar translucent backgroundColor="transparent" />
+              {showGlobalLayout ? (
+                <GlobalLayout setShowGlobalLayout={setShowGlobalLayout} />
+              ) : (
+                <CustomComponent
+                  title="Login"
+                  onPress={openLink}
+                  textColor={textColor}
+                />
+              )}
+            </>
           )}
         </View>
       </GestureHandlerRootView>
