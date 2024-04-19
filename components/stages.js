@@ -279,7 +279,7 @@ const Stages = ({ currentStage, setCurrentStage, waitFor }) => {
                           borderRadius: 15,
                         }}
                       >
-                        <Dialog.Title>Task Options</Dialog.Title>
+                        <Dialog.Title>Stages Options</Dialog.Title>
                         <Dialog.Description style={{ alignItems: "center" }}>
                           Choose an option
                         </Dialog.Description>
