@@ -57,7 +57,6 @@ const TaskModule = () => {
   const textColor = colorScheme === "dark" ? "white" : "black";
   const [isUpdating, setIsUpdating] = useState(false);
   let animationPlayed = false;
-
   const flatListRef = useRef(null);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [taskName, setTaskName] = useState("");
